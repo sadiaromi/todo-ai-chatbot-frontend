@@ -1,5 +1,5 @@
 import { auth } from "../../../../auth.config";
 
-// Export the handler directly as both GET and POST
-export const GET = auth;
-export const POST = auth;
+// Export the auth handlers
+export const GET = auth.GET;
+export const POST = auth.POST;
