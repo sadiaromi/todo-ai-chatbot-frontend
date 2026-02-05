@@ -13,7 +13,13 @@ from sqlmodel import SQLModel
 from backend.src.services.database import engine
 
 def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+    try:
+        # Create all database tables
+        SQLModel.metadata.create_all(engine)
+        print("Database tables created successfully")
+    except Exception as e:
+        print(f"Error creating database tables: {e}")
+        # Continue anyway as tables might already exist
 
 # Set environment variables for Hugging Face Spaces
 os.environ.setdefault("DATABASE_URL", "sqlite:///./todo_chatbot_hf.db")

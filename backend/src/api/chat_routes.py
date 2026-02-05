@@ -75,11 +75,19 @@ def chat_endpoint(
     session.commit()
 
     # Process the message using the AI agent and MCP tools
-    ai_response = process_user_message_with_ai(
-        user_id=user_id,
-        user_message=chat_request.message,
-        task_service=task_service
-    )
+    try:
+        ai_response = process_user_message_with_ai(
+            user_id=user_id,
+            user_message=chat_request.message,
+            task_service=task_service
+        )
+    except Exception as e:
+        print(f"Error processing user message: {str(e)}")
+        # Return a generic error response
+        ai_response = {
+            'response': "I'm sorry, I encountered an error processing your request. Please try again.",
+            'tool_calls': []
+        }
 
     # Create assistant message in database
     assistant_message = Message(

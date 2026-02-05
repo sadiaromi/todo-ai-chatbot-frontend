@@ -275,10 +275,18 @@ class MCPServer:
 
     def _execute_add_task(self, user_id: str, title: str, description: str = "", priority: str = "medium"):
         session_gen = get_session()
-        session = next(session_gen)
         try:
-            tool = MCPTool(session)
-            return tool.add_task(user_id, title, description, priority)
+            session = next(session_gen)
+            try:
+                tool = MCPTool(session)
+                return tool.add_task(user_id, title, description, priority)
+            except Exception as e:
+                print(f"MCP add_task error: {str(e)}")
+                return {
+                    "success": False,
+                    "error": str(e),
+                    "message": "Failed to add task"
+                }
         finally:
             try:
                 next(session_gen)
@@ -287,10 +295,20 @@ class MCPServer:
 
     def _execute_list_tasks(self, user_id: str, status: str = "all"):
         session_gen = get_session()
-        session = next(session_gen)
         try:
-            tool = MCPTool(session)
-            return tool.list_tasks(user_id, status)
+            session = next(session_gen)
+            try:
+                tool = MCPTool(session)
+                return tool.list_tasks(user_id, status)
+            except Exception as e:
+                print(f"MCP list_tasks error: {str(e)}")
+                return {
+                    "success": False,
+                    "error": str(e),
+                    "message": "Failed to list tasks",
+                    "tasks": [],
+                    "count": 0
+                }
         finally:
             try:
                 next(session_gen)
@@ -299,10 +317,18 @@ class MCPServer:
 
     def _execute_complete_task(self, user_id: str, task_id: str):
         session_gen = get_session()
-        session = next(session_gen)
         try:
-            tool = MCPTool(session)
-            return tool.complete_task(user_id, task_id)
+            session = next(session_gen)
+            try:
+                tool = MCPTool(session)
+                return tool.complete_task(user_id, task_id)
+            except Exception as e:
+                print(f"MCP complete_task error: {str(e)}")
+                return {
+                    "success": False,
+                    "error": str(e),
+                    "message": "Failed to complete task"
+                }
         finally:
             try:
                 next(session_gen)
@@ -311,10 +337,18 @@ class MCPServer:
 
     def _execute_update_task(self, user_id: str, task_id: str, title: str = None, description: str = None, priority: str = None):
         session_gen = get_session()
-        session = next(session_gen)
         try:
-            tool = MCPTool(session)
-            return tool.update_task(user_id, task_id, title, description, priority)
+            session = next(session_gen)
+            try:
+                tool = MCPTool(session)
+                return tool.update_task(user_id, task_id, title, description, priority)
+            except Exception as e:
+                print(f"MCP update_task error: {str(e)}")
+                return {
+                    "success": False,
+                    "error": str(e),
+                    "message": "Failed to update task"
+                }
         finally:
             try:
                 next(session_gen)
@@ -323,10 +357,18 @@ class MCPServer:
 
     def _execute_delete_task(self, user_id: str, task_id: str):
         session_gen = get_session()
-        session = next(session_gen)
         try:
-            tool = MCPTool(session)
-            return tool.delete_task(user_id, task_id)
+            session = next(session_gen)
+            try:
+                tool = MCPTool(session)
+                return tool.delete_task(user_id, task_id)
+            except Exception as e:
+                print(f"MCP delete_task error: {str(e)}")
+                return {
+                    "success": False,
+                    "error": str(e),
+                    "message": "Failed to delete task"
+                }
         finally:
             try:
                 next(session_gen)
