@@ -6,9 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    typedRoutes: false, // Disable this for older Next.js compatibility
-  },
+  // Remove experimental section entirely
 };
 
 export default nextConfig;
