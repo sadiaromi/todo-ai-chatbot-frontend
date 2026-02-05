@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
   experimental: {
-    typedRoutes: true,
+    typedRoutes: false, // Disable this for older Next.js compatibility
   },
 };
 
