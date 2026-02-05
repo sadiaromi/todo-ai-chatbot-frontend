@@ -26,8 +26,11 @@ export default function SignupPage() {
         redirect: false
       });
 
-      if (response?.error) {
-        setError(response.error.message || 'Registration failed. Please try again with different credentials.');
+      if (!response || ('error' in response && response.error)) {
+        const errorMessage = typeof response === 'object' && 'error' in response ?
+          (response.error as any)?.message || 'Registration failed. Please try again with different credentials.' :
+          'Registration failed. Please try again with different credentials.';
+        setError(errorMessage);
       } else {
         // Successful registration - redirect to dashboard
         router.push('/');

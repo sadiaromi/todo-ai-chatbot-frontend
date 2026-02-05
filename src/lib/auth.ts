@@ -1,4 +1,3 @@
-import { createAuth } from "better-auth";
-import { betterAuthConfig } from "../auth.config";
+import { auth } from "../../auth.config";
 
-export const auth = createAuth(betterAuthConfig);
+export { auth };

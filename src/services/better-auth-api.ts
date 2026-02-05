@@ -3,6 +3,8 @@ import { useSession } from '../lib/auth-react';
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://roman-sadia-todo-ai-chatbot-backend.hf.space';
 
 class BetterAuthApiService {
+  baseURL: string;
+
   constructor() {
     this.baseURL = API_BASE_URL;
   }
@@ -13,18 +15,20 @@ class BetterAuthApiService {
     const token = session?.user?.id; // Use user ID as the identifier
 
     const url = `${this.baseURL}${endpoint}`;
-    const config: RequestInit = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...options.headers,
-      },
-      ...options,
-    };
+    const headers = {
+      'Content-Type': 'application/json',
+      ...options.headers,
+    } as Record<string, string>;
 
     // Add auth token if available
-    if (token && !config.headers?.['Authorization']) {
-      (config.headers as Record<string, string>).Authorization = `Bearer ${token}`;
+    if (token && !headers['Authorization']) {
+      headers['Authorization'] = `Bearer ${token}`;
     }
+
+    const config: RequestInit = {
+      headers,
+      ...options,
+    };
 
     try {
       const response = await fetch(url, config);

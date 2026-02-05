@@ -24,8 +24,11 @@ export default function LoginPage() {
         redirect: false
       });
 
-      if (response?.error) {
-        setError(response.error.message || 'Invalid email or password. Please try again.');
+      if (!response || ('error' in response && response.error)) {
+        const errorMessage = typeof response === 'object' && 'error' in response ?
+          (response.error as any)?.message || 'Invalid email or password. Please try again.' :
+          'Invalid email or password. Please try again.';
+        setError(errorMessage);
       } else {
         // Successful login - redirect to dashboard
         router.push('/');
