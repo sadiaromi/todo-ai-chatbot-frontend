@@ -46,8 +46,12 @@ def chat_endpoint(
         user_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, user_id)
 
     # Initialize services
-    conversation_service = ConversationService(session)
-    task_service = TaskService(session)
+    try:
+        conversation_service = ConversationService(session)
+        task_service = TaskService(session)
+    except Exception as e:
+        print(f"Error initializing services: {str(e)}")
+        raise HTTPException(status_code=500, detail="Service initialization error")
 
     # Get or create conversation
     conversation = None
@@ -60,19 +64,28 @@ def chat_endpoint(
             pass
 
     if not conversation:
-        conversation = conversation_service.create_conversation(
-            user_id=user_uuid,
-            title=f"Chat started {chat_request.message[:30]}..."
-        )
+        try:
+            conversation = conversation_service.create_conversation(
+                user_id=user_uuid,
+                title=f"Chat started {chat_request.message[:30]}..."
+            )
+        except Exception as e:
+            print(f"Error creating conversation: {str(e)}")
+            raise HTTPException(status_code=500, detail="Error creating conversation")
 
     # Create message in database
-    user_message = Message(
-        conversation_id=conversation.conversation_id,
-        sender_type="user",
-        content=chat_request.message
-    )
-    session.add(user_message)
-    session.commit()
+    try:
+        user_message = Message(
+            conversation_id=conversation.conversation_id,
+            sender_type="user",
+            content=chat_request.message
+        )
+        session.add(user_message)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print(f"Error saving user message: {str(e)}")
+        raise HTTPException(status_code=500, detail="Database error saving message")
 
     # Process the message using the AI agent and MCP tools
     try:
@@ -90,13 +103,19 @@ def chat_endpoint(
         }
 
     # Create assistant message in database
-    assistant_message = Message(
-        conversation_id=conversation.conversation_id,
-        sender_type="assistant",
-        content=ai_response['response']
-    )
-    session.add(assistant_message)
-    session.commit()
+    try:
+        assistant_message = Message(
+            conversation_id=conversation.conversation_id,
+            sender_type="assistant",
+            content=ai_response['response']
+        )
+        session.add(assistant_message)
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print(f"Error saving assistant message: {str(e)}")
+        # Still return the response even if saving the message fails
+        pass  # Continue with the response
 
     return ChatResponse(
         conversation_id=str(conversation.conversation_id),
