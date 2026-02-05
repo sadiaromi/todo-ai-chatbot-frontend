@@ -11,7 +11,7 @@
   "dependencies": {
     "@better-fetch/fetch": "^1.1.21",
     "ai": "^3.0.0",
-    "better-auth": "^1.4.15",
+    "better-auth": "^0.5.3",
     "next": "14.2.15",
     "openai": "^4.0.0",
     "react": "18.2.0",
