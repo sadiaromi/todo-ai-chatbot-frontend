@@ -15,10 +15,16 @@ from backend.src.services.database import engine
 def create_db_and_tables():
     try:
         # Create all database tables
+        from backend.src.models.user import User
+        from backend.src.models.conversation import Conversation
+        from backend.src.models.message import Message
+        from backend.src.models.task import Task
         SQLModel.metadata.create_all(engine)
         print("Database tables created successfully")
     except Exception as e:
         print(f"Error creating database tables: {e}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
         # Continue anyway as tables might already exist
 
 # Set environment variables for Hugging Face Spaces

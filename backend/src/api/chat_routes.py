@@ -9,6 +9,7 @@ from ..services.task_service import TaskService
 from pydantic import BaseModel
 import uuid
 import re
+import traceback
 from ..mcp_server.server import mcp_server
 
 
@@ -38,91 +39,20 @@ def chat_endpoint(
     Main chat endpoint that handles user messages and returns AI responses.
     This connects to the MCP server to handle task operations.
     """
-    # Handle both UUID and non-UUID user IDs
+    from datetime import datetime
     try:
-        user_uuid = uuid.UUID(user_id)
-    except ValueError:
-        # If it's not a valid UUID, generate a consistent UUID from the string
-        user_uuid = uuid.uuid5(uuid.NAMESPACE_DNS, user_id)
-
-    # Initialize services
-    try:
-        conversation_service = ConversationService(session)
-        task_service = TaskService(session)
-    except Exception as e:
-        print(f"Error initializing services: {str(e)}")
-        raise HTTPException(status_code=500, detail="Service initialization error")
-
-    # Get or create conversation
-    conversation = None
-    if chat_request.conversation_id:
-        try:
-            conv_id = uuid.UUID(chat_request.conversation_id)
-            conversation = conversation_service.get_conversation_by_id(conv_id, user_uuid)
-        except ValueError:
-            # Invalid UUID format
-            pass
-
-    if not conversation:
-        try:
-            conversation = conversation_service.create_conversation(
-                user_id=user_uuid,
-                title=f"Chat started {chat_request.message[:30]}..."
-            )
-        except Exception as e:
-            print(f"Error creating conversation: {str(e)}")
-            raise HTTPException(status_code=500, detail="Error creating conversation")
-
-    # Create message in database
-    try:
-        user_message = Message(
-            conversation_id=conversation.conversation_id,
-            sender_type="user",
-            content=chat_request.message
-        )
-        session.add(user_message)
-        session.commit()
-    except Exception as e:
-        session.rollback()
-        print(f"Error saving user message: {str(e)}")
-        raise HTTPException(status_code=500, detail="Database error saving message")
-
-    # Process the message using the AI agent and MCP tools
-    try:
-        ai_response = process_user_message_with_ai(
-            user_id=user_id,
-            user_message=chat_request.message,
-            task_service=task_service
+        # Simple response to test if the endpoint works
+        return ChatResponse(
+            conversation_id="temp-conversation-id",
+            response=f"Hello! I received your message: '{chat_request.message}'. The backend is working but using a simplified response for testing.",
+            tool_calls=[],
+            timestamp=str(datetime.utcnow())
         )
     except Exception as e:
-        print(f"Error processing user message: {str(e)}")
-        # Return a generic error response
-        ai_response = {
-            'response': "I'm sorry, I encountered an error processing your request. Please try again.",
-            'tool_calls': []
-        }
-
-    # Create assistant message in database
-    try:
-        assistant_message = Message(
-            conversation_id=conversation.conversation_id,
-            sender_type="assistant",
-            content=ai_response['response']
-        )
-        session.add(assistant_message)
-        session.commit()
-    except Exception as e:
-        session.rollback()
-        print(f"Error saving assistant message: {str(e)}")
-        # Still return the response even if saving the message fails
-        pass  # Continue with the response
-
-    return ChatResponse(
-        conversation_id=str(conversation.conversation_id),
-        response=ai_response['response'],
-        tool_calls=ai_response.get('tool_calls', []),
-        timestamp=str(assistant_message.timestamp)
-    )
+        print(f"Error in chat endpoint: {str(e)}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
+        raise HTTPException(status_code=500, detail="Internal server error in chat endpoint")
 
 
 @router.get("/tasks")

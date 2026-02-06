@@ -11,19 +11,6 @@ AI-Powered Todo Web Application with natural language task management, authentic
 - **Modern UI**: Clean, professional SaaS-style interface
 - **Hugging Face Backend**: Connects to AI backend deployed on Hugging Face Spaces
 
-## 🛠️ Tech Stack
-
-### Frontend
-- **Next.js** (App Router)
-- **React** (Client Components)
-- **Tailwind CSS** (Styling)
-- **TypeScript**
-
-## 🚦 Getting Started
-
-### Prerequisites
-
-- Node.js 18+
 
 ### Installation
 
@@ -99,45 +86,9 @@ The AI chatbot understands various commands:
 ## 🌐 Backend Connection
 
 This frontend connects to a backend deployed on Hugging Face Spaces at:
-- Backend URL: `https://roman-sadia-todo-ai-chatbot-backend.hf.space`
+- Backend URL: `https://your-hf-space-url.hf.space`
 
-## 🚢 Deployment
 
-### Vercel Deployment
-
-This application is optimized for Vercel deployment:
-
-1. Go to [Vercel](https://vercel.com)
-2. Import this GitHub repository
-3. Add environment variable:
-   - `NEXT_PUBLIC_API_BASE_URL`: Your backend API URL
-4. Deploy
-
-### Environment Variables
-
-#### Frontend (.env.local)
-```bash
-NEXT_PUBLIC_API_BASE_URL=https://your-hf-space-url.hf.space
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests if applicable
-5. Run tests (`npm test`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-## 📄 License
-
-MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-For support, please open an issue in the GitHub repository.
 
 ## 🛠️ Tech Stack
 
@@ -228,40 +179,9 @@ npm install
 ```
 
 3. Create frontend environment file:
-```bash
-# Create .env.local in project root
-echo "NEXT_PUBLIC_API_BASE_URL=http://localhost:8000" > .env.local
-```
-
-### Database Setup
-
-For local development, the application uses SQLite by default. For production, configure PostgreSQL in your `.env` file:
-
-```bash
-DATABASE_URL=postgresql://username:password@localhost:5432/todo_chatbot
-```
-
-To initialize the database:
-```bash
-cd backend
-source venv/bin/activate
-alembic upgrade head
-```
-
-### Environment Variables
-
-#### Backend (.env)
-```bash
-DATABASE_URL=sqlite:///./todo_chatbot.db
-SECRET_KEY=your-super-secret-key-change-in-production
-ALGORITHM=HS256
-ACCESS_TOKEN_EXPIRE_MINUTES=30
-OPENAI_API_KEY=your-openai-api-key-here
-```
-
 #### Frontend (.env.local)
 ```bash
-NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+NEXT_PUBLIC_API_BASE_URL=https://your-hf-space-url.hf.space
 ```
 
 ## ▶️ Running the Application
@@ -285,10 +205,7 @@ The application will be available at:
 - Backend API: http://localhost:8000
 - Backend API Docs: http://localhost:8000/docs
 
-### Using Docker Compose
-```bash
-docker-compose up --build
-```
+
 
 ## 🧠 AI Architecture
 
@@ -301,110 +218,6 @@ The application implements an Official MCP SDK server exposing the following too
 - `update_task`: Modify task properties
 - `delete_task`: Remove tasks
 
-### Natural Language Commands
-The AI chatbot understands various commands:
-
-#### Adding Tasks
-- "Add a task to buy groceries"
-- "Create a new task for calling mom"
-- "Make a todo for project deadline"
-
-#### Listing Tasks
-- "Show my tasks"
-- "What do I have pending?"
-- "List completed tasks"
-
-#### Completing Tasks
-- "Mark task 1 as complete"
-- "Complete the grocery task"
-- "Check off item 3"
-
-#### Updating Tasks
-- "Update task 1 to call dad instead"
-- "Change the priority of task 2"
-
-#### Deleting Tasks
-- "Delete the old task"
-- "Remove task 3"
-
-## 🔐 Authentication Flow
-
-1. **Login/Signup**: Users authenticate via Better Auth email/password
-2. **Session Management**: Better Auth handles sessions with secure cookies
-3. **Protected Routes**: Unauthenticated users redirected to login
-4. **API Authentication**: User ID from Better Auth session passed to backend API
-5. **Logout**: Secure session termination via Better Auth
-
-## 📊 Database Schema
-
-### Task Model
-- id (UUID)
-- user_id (UUID, foreign key)
-- title (string)
-- description (string, optional)
-- completed (boolean)
-- priority (enum: low, medium, high)
-- created_at (datetime)
-- updated_at (datetime)
-
-### User Model
-- id (UUID)
-- email (string)
-- password_hash (string)
-- created_at (datetime)
-
-### Conversation Model
-- id (UUID)
-- user_id (UUID, foreign key)
-- created_at (datetime)
-- updated_at (datetime)
-
-### Message Model
-- id (UUID)
-- conversation_id (UUID, foreign key)
-- role (enum: user, assistant)
-- content (text)
-- created_at (datetime)
-
-## 🧪 Testing
-
-### Backend Tests
-```bash
-cd backend
-python -m pytest
-```
-
-### Frontend Tests
-```bash
-npm run test
-```
-
-## 🚢 Deployment
-
-### Production Build
-```bash
-# Frontend
-npm run build
-
-# Backend
-# Configure production database and environment variables
-gunicorn src.main:app -w 4 -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
-```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Make your changes
-4. Add tests if applicable
-5. Run tests (`npm test` and `python -m pytest`)
-6. Commit your changes (`git commit -m 'Add amazing feature'`)
-7. Push to the branch (`git push origin feature/amazing-feature`)
-8. Open a Pull Request
-
-## 📄 License
-
-MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🆘 Support
 
